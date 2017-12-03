@@ -2759,7 +2759,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Asteroid Crashers
+  m_Text: Asteroid Crasher
 --- !u!222 &977344884
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4442,7 +4442,7 @@ Prefab:
     - target: {fileID: 198258870159025204, guid: 9a9951cbadc0276488d289c0da7a4103,
         type: 2}
       propertyPath: randomSeed
-      value: 915974663
+      value: 601441036
       objectReference: {fileID: 0}
     - target: {fileID: 198877592068910704, guid: 9a9951cbadc0276488d289c0da7a4103,
         type: 2}
@@ -4452,7 +4452,7 @@ Prefab:
     - target: {fileID: 198877592068910704, guid: 9a9951cbadc0276488d289c0da7a4103,
         type: 2}
       propertyPath: randomSeed
-      value: -168831718
+      value: 28075645
       objectReference: {fileID: 0}
     - target: {fileID: 198948648034961182, guid: 9a9951cbadc0276488d289c0da7a4103,
         type: 2}
@@ -4462,7 +4462,7 @@ Prefab:
     - target: {fileID: 198948648034961182, guid: 9a9951cbadc0276488d289c0da7a4103,
         type: 2}
       propertyPath: randomSeed
-      value: -1773309268
+      value: 2038217768
       objectReference: {fileID: 0}
     - target: {fileID: 198258870159025204, guid: 9a9951cbadc0276488d289c0da7a4103,
         type: 2}
@@ -4478,6 +4478,21 @@ Prefab:
         type: 2}
       propertyPath: InitialModule.startLifetime.minScalar
       value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 198877592068910704, guid: 9a9951cbadc0276488d289c0da7a4103,
+        type: 2}
+      propertyPath: InitialModule.maxNumParticles
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 198258870159025204, guid: 9a9951cbadc0276488d289c0da7a4103,
+        type: 2}
+      propertyPath: InitialModule.maxNumParticles
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 198948648034961182, guid: 9a9951cbadc0276488d289c0da7a4103,
+        type: 2}
+      propertyPath: InitialModule.maxNumParticles
+      value: 50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9a9951cbadc0276488d289c0da7a4103, type: 2}
@@ -4973,9 +4988,9 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1900, y: 768}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 1
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
