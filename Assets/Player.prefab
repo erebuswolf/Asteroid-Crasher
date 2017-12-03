@@ -127,6 +127,9 @@ MonoBehaviour:
   VelMassRatio: 20
   AngularVel: 250
   Bound: 10
+  sprite: {fileID: 212906983324358730}
+  DeathColor: {r: 0.23788929, g: 0.4044118, b: 0.25970945, a: 1}
+  manager: {fileID: 0}
 --- !u!212 &212906983324358730
 SpriteRenderer:
   m_ObjectHideFlags: 1

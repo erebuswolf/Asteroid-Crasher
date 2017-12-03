@@ -18,12 +18,18 @@ public class PlayerControlScript : MonoBehaviour {
 
     public float Bound;
 
+    public SpriteRenderer sprite;
+
+    public Color DeathColor;
+
     bool endGame;
 
     bool endRoutine;
 
     bool passedGate;
     
+    bool dead;
+
     public GameManager manager;
 
     public int AsteroidCount() {
@@ -56,6 +62,21 @@ public class PlayerControlScript : MonoBehaviour {
         return count;
     }
 
+    IEnumerator deathRoutine() {
+        dead = true;
+        sprite.color = DeathColor;
+        RigidBody.velocity = Vector3.zero;
+        yield return new WaitForSeconds(2);
+        this.transform.position = new Vector2(30, 0);
+        dead = false;
+        sprite.color = Color.white;
+
+    }
+
+    void FailedLevel() {
+        manager.FailedLevel();
+    }
+
     // Function to remove all asteroids from the player.
     void ShedAsteroids() {
         foreach(Transform child in gameObject.transform) {
@@ -79,7 +100,7 @@ public class PlayerControlScript : MonoBehaviour {
         curPos.x = 25;
         this.transform.position = curPos;
 
-        RigidBody.velocity = new Vector2(-10, 0);
+        RigidBody.velocity = new Vector2(-20, 0);
         while(this.transform.position.x > -8.3f) {
             yield return new WaitForSeconds(0.01f);
         }
@@ -94,7 +115,7 @@ public class PlayerControlScript : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-        if (!manager.GameStarted() || endRoutine) {
+        if (!manager.GameStarted() || endRoutine || dead) {
             return;
         }
         asteroidCount = GetAsteroidCount(this.gameObject);
@@ -173,6 +194,8 @@ public class PlayerControlScript : MonoBehaviour {
     }
 
     public void BlowUp() {
-        Debug.LogWarningFormat("game lost!");
+        StartCoroutine(deathRoutine());
+        FailedLevel();
+        // Animation for blowing up.
     }
 }

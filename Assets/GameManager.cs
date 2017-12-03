@@ -10,6 +10,10 @@ public class GameManager : MonoBehaviour {
     int currentLevel = 1;
     bool started = false;
 
+    bool failed = false;
+
+    bool resetOnFail = false;
+
     public UIController uiController;
 
     public bool GameStarted() {
@@ -17,7 +21,10 @@ public class GameManager : MonoBehaviour {
     }
 
     public bool CheckWinConditionLevel1(PlayerControlScript player) {
-        return player.AsteroidCount() > 5 && player.CheckVictory();
+        if (player.CheckVictory() && player.AsteroidCount() < 5) {
+            FailedLevel();
+        }
+        return player.AsteroidCount() >= 5 && player.CheckVictory();
     }
 
 	// Use this for initialization
@@ -28,29 +35,73 @@ public class GameManager : MonoBehaviour {
 
     }
 
+    public void FailedLevel() {
+        Debug.LogWarning("failed called");
+        failed = true;
+    }
+
     IEnumerator PlayLevel() {
-        uiController.StartLevel(1);
+        do {
+            uiController.StartLevel(1);
 
-        yield return new WaitForSeconds(3);
-        uiController.HideGameUI();
+            yield return new WaitForSeconds(3);
+            uiController.HideGameUI();
+            if (failed) {
+                yield return new WaitForSeconds(2f);
+            }
 
-        Spawner.StartSpawning();
+            failed = false;
+            resetOnFail = false;
 
-        yield return new WaitForSeconds(20);
-        Spawner.StopAsteroids();
+            Spawner.StartSpawning();
+            int i = 0;
+            while (i < 40) {
+                yield return new WaitForSeconds(.5f);
+                if (failed) {
+                    break;
+                }
+            }
+            if (failed) {
+                continue;
+            }
+            Spawner.StopAsteroids();
 
-        yield return new WaitForSeconds(5);
-        Spawner.StopMines();
+            i = 0;
+            while (i < 10) {
+                yield return new WaitForSeconds(.5f);
+                i++;
+                if (failed) {
+                    break;
+                }
+            }
+            if (failed) {
+                continue;
+            }
+            Spawner.StopMines();
+            i = 0;
+            while (i < 6) {
+                yield return new WaitForSeconds(.5f);
+                if (failed) {
+                    break;
+                }
+                i++;
+            }
+            if (failed) {
+                continue;
+            }
 
-        yield return new WaitForSeconds(3);
-        Spawner.SpawnGate(1);
+            Spawner.SpawnGate(1);
 
-        while(!CheckWinConditionLevel1(Player)) {
-            yield return new WaitForSeconds(.1f);
-        }
+            i = 0;
+            while (!CheckWinConditionLevel1(Player) && !failed) {
+                yield return new WaitForSeconds(.1f);
+                i++;
+            }
+
+        } while (failed);
 
         Spawner.TriggerVictoryOnGate();
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(3f);
         Player.resetToNextLevel();
         // Level Victory
 
@@ -63,5 +114,18 @@ public class GameManager : MonoBehaviour {
             uiController.HideStartUI();
             StartCoroutine(PlayLevel());
         }
+
+        if (failed && !resetOnFail) {
+            resetOnFail = true;
+            StartCoroutine(resetGameOnFail());
+        }
+    }
+
+    IEnumerator resetGameOnFail() {
+        Spawner.TriggerVictoryOnGate();
+        Spawner.StopMines();
+        Spawner.StopAsteroids();
+        yield return new WaitForSeconds(3); 
+        Player.resetToNextLevel();
     }
 }

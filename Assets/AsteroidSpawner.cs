@@ -41,7 +41,11 @@ public class AsteroidSpawner : MonoBehaviour {
     }
 
     public void TriggerVictoryOnGate() {
-        Gamegate.GetComponent<Gate>().RunVictory();
+        if (gameObject.activeInHierarchy) {
+            if (Gamegate.activeInHierarchy) {
+                Gamegate.GetComponent<Gate>().RunVictory();
+            }
+        }
     }
 
     // Use this for initialization
@@ -71,6 +75,8 @@ public class AsteroidSpawner : MonoBehaviour {
     }
 
     public void StartSpawning() {
+        stopMines = false;
+        stopAsteroids = false;
         StartCoroutine(AsteroidSpawn());
         StartCoroutine(MineSpawn());
     }
