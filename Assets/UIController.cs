@@ -7,11 +7,20 @@ using UnityEngine.UI;
 public class UIController : MonoBehaviour {
     public GameObject StartUI;
     public GameObject Level1Instructions;
+    public GameObject LevelFail;
 
     public void HideStartUI() {
         StartUI.SetActive(false);
     }
     
+    public void FailedLevel() {
+        LevelFail.SetActive(true);
+    }
+
+    public void ClearFail() {
+        LevelFail.SetActive(false);
+    }
+
     public void StartLevel (int level) {
         Level1Instructions.SetActive(true);
     }

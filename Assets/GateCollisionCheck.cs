@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class GateCollisionCheck : MonoBehaviour {
 
+    public GameObject explosion;
+
+    bool exploding;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -14,10 +18,21 @@ public class GateCollisionCheck : MonoBehaviour {
 		
 	}
 
+    IEnumerator explode() {
+        exploding = true;
+        explosion.SetActive(true);
+        yield return new WaitForSeconds(.5f);
+        explosion.SetActive(false);
+        yield return new WaitForSeconds(5f);
+        exploding = false;
+    }
 
     private void OnTriggerEnter2D(Collider2D collision) {
         if(collision.gameObject.layer == 8) {
-            Debug.LogWarning("YOU LOST!!!");
+            FindObjectOfType<GameManager>().FailedLevel();
+            if (!exploding) {
+                StartCoroutine(explode());
+            }
         }
     }
 

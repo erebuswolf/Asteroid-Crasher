@@ -35,7 +35,7 @@ public class PlayerControlScript : MonoBehaviour {
     public int AsteroidCount() {
         return GetAsteroidCount(this.gameObject);
     }
-
+    
     public void PassedGate() {
         passedGate = true;
     }
@@ -91,6 +91,12 @@ public class PlayerControlScript : MonoBehaviour {
 
     public void resetToNextLevel() {
         endGame = false;
+
+        dead = false;
+        passedGate = false;
+
+        this.transform.rotation = Quaternion.identity;
+
         ShedAsteroids();
         StartCoroutine(resetLevelRoutine());
     } 
@@ -125,6 +131,9 @@ public class PlayerControlScript : MonoBehaviour {
     }
 
     public bool CheckVictory() {
+        if (transform.position.x > 21 && !passedGate) {
+            manager.FailedLevel();
+        }
         return (transform.position.x > 21 && passedGate);
     }
 
@@ -153,6 +162,17 @@ public class PlayerControlScript : MonoBehaviour {
             RigidBody.angularVelocity = 0;
         }
 
+    }
+
+    IEnumerator gateBreak() {
+        dead = true;
+        RigidBody.velocity = new Vector3(20, 0, 0);
+        yield return new WaitForSeconds(3);
+        dead = false;
+
+    }
+    public void Gatebreak() {
+        StartCoroutine(gateBreak());
     }
 
     public void EndGame() {

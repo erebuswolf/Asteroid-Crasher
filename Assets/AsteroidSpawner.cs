@@ -41,10 +41,8 @@ public class AsteroidSpawner : MonoBehaviour {
     }
 
     public void TriggerVictoryOnGate() {
-        if (gameObject.activeInHierarchy) {
-            if (Gamegate.activeInHierarchy) {
-                Gamegate.GetComponent<Gate>().RunVictory();
-            }
+        if (Gamegate.activeInHierarchy) {
+            Gamegate.GetComponent<Gate>().RunVictory();
         }
     }
 

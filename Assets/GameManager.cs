@@ -41,8 +41,12 @@ public class GameManager : MonoBehaviour {
 
     IEnumerator PlayLevel() {
         do {
+            if (failed) {
+                uiController.FailedLevel();
+                yield return new WaitForSeconds(3);
+                uiController.ClearFail();
+            }
             uiController.StartLevel(1);
-
             yield return new WaitForSeconds(3);
             uiController.HideGameUI();
             if (failed) {

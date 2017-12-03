@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Gate : MonoBehaviour {
     public Rigidbody2D rigidBody;
-    
+    bool runningVictory;
+
 	// Use this for initialization
 	void Start () {
     }
@@ -31,9 +32,20 @@ public class Gate : MonoBehaviour {
 
     IEnumerator endSequence() {
         rigidBody.velocity = new Vector3(-7, 0, 0);
-        yield return new WaitForSeconds(3f);
-        rigidBody.velocity = new Vector3(0, 0, 0);
-        FindObjectOfType<PlayerControlScript>().EndGame();
+        int i = 0;
+        while (i < 6) {
+            i++;
+            yield return new WaitForSeconds(.5f);
+            if (runningVictory) {
+                FindObjectOfType<PlayerControlScript>().Gatebreak();
+                break;
+            }
+        }
+
+        if (!runningVictory) {
+            FindObjectOfType<PlayerControlScript>().EndGame();
+            rigidBody.velocity = new Vector3(0, 0, 0);
+        }
     }
     
     public void RunVictory() {
@@ -41,9 +53,11 @@ public class Gate : MonoBehaviour {
     }
 
     IEnumerator victorySequence() {
+        runningVictory = true;
         rigidBody.velocity = new Vector3(-15, 0, 0);
         yield return new WaitForSeconds(20f);
         rigidBody.velocity = new Vector3(0, 0, 0);
         this.gameObject.SetActive(false);
+        runningVictory = false;
     }
 }
