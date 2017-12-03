@@ -38,6 +38,7 @@ public class Mine : MonoBehaviour {
 
     public void BlowUp() {
         if (!blown) {
+            boomSound.pitch = Random.Range(.9f, 1.1f);
             boomSound.Play();
             blown = true;
             Explosion.SetActive(true);

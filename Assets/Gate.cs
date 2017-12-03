@@ -6,6 +6,8 @@ public class Gate : MonoBehaviour {
     public Rigidbody2D rigidBody;
     bool runningVictory;
 
+    public AudioSource PortalNoise;
+
 	// Use this for initialization
 	void Start () {
     }
@@ -19,6 +21,7 @@ public class Gate : MonoBehaviour {
         PlayerControlScript player = collision.GetComponent<PlayerControlScript>();
         if (player != null) {
             player.PassedGate();
+            PortalNoise.Play();
         }
     }
 

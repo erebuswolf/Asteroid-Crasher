@@ -5,7 +5,7 @@ using UnityEngine;
 public class GateCollisionCheck : MonoBehaviour {
 
     public ParticleSystem explosion;
-
+    public AudioSource boomglass;
     bool exploding;
 
 	// Use this for initialization
@@ -19,6 +19,7 @@ public class GateCollisionCheck : MonoBehaviour {
 	}
 
     IEnumerator explode() {
+        boomglass.Play();
         exploding = true;
         explosion.Play();
         yield return new WaitForSeconds(5f);

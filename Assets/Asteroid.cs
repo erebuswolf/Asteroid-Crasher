@@ -114,6 +114,7 @@ public class Asteroid : MonoBehaviour {
     }
 
     public void CreateAsNew() {
+        Bonk.pitch = Random.Range(.8f, 1f);
         PromoteChildAsteroid();
         float yPos = Random.Range(-10f, 10f);
         Vector3 pos = new Vector3(20, yPos, 0);
