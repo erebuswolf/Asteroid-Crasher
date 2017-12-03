@@ -2398,6 +2398,11 @@ Prefab:
       propertyPath: manager
       value: 
       objectReference: {fileID: 869448767}
+    - target: {fileID: 114992359283255900, guid: 9a9951cbadc0276488d289c0da7a4103,
+        type: 2}
+      propertyPath: AngularVel
+      value: 250
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9a9951cbadc0276488d289c0da7a4103, type: 2}
   m_IsPrefabParent: 0

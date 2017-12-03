@@ -58,7 +58,7 @@ public class PlayerControlScript : MonoBehaviour {
         foreach (Transform child in obj.transform) {
             Asteroid asteroid = child.gameObject.GetComponent<Asteroid>();
             if (asteroid != null) {
-                count += GetAsteroidCount(asteroid.VisObject);
+                count += GetAsteroidCount(asteroid.VisObject, type);
                 if(asteroid.type == type) {
                     count++;
                 }
@@ -169,7 +169,7 @@ public class PlayerControlScript : MonoBehaviour {
             }
         }
 
-        float moveVel = AngularVel * (1f - Mathf.Sqrt( Mathf.Lerp(0, .9f, Mathf.Clamp01(asteroidCount / 20f))));
+        float moveVel = AngularVel * (1f - Mathf.Pow( Mathf.Lerp(0, .9f, Mathf.Clamp01(asteroidCount / 20f)), 1/4f));
 
         if (rotateRight && !rotateLeft) {
             RigidBody.angularVelocity = -moveVel;
