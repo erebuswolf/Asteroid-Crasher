@@ -265,6 +265,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   asteroid: {fileID: 114954751578086694}
+  Destroyed: 0
 --- !u!114 &114542242019151198
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -291,6 +292,7 @@ MonoBehaviour:
   rigidBody: {fileID: 50706754930328344}
   PhysicsObject: {fileID: 1220939373537390}
   VisObject: {fileID: 1949144201059826}
+  DisabledColor: {r: 0.42647058, g: 0.279628, b: 0.1222967, a: 1}
   startVel: 7
 --- !u!212 &212536262386155478
 SpriteRenderer:

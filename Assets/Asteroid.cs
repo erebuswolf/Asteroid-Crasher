@@ -9,6 +9,8 @@ public class Asteroid : MonoBehaviour {
     public GameObject PhysicsObject;
     public GameObject VisObject;
 
+    public Color DisabledColor;
+
     public float startVel;
 
     bool attached = false;
@@ -114,15 +116,24 @@ public class Asteroid : MonoBehaviour {
     
     // Update is called once per frame
     void Update () {
-		if ( PhysicsObject.transform.position.x < -20 && !attached) {
+        if (PhysicsObject.activeSelf && !VisObject.activeSelf) {
+            VisObject.transform.position = PhysicsObject.transform.position;
+            VisObject.transform.rotation = PhysicsObject.transform.rotation;
+        } else if (!PhysicsObject.activeSelf && VisObject.activeSelf) {
+            PhysicsObject.transform.position = VisObject.transform.position;
+            PhysicsObject.transform.rotation = VisObject.transform.rotation;
+        } else if (PhysicsObject.activeSelf && VisObject.activeSelf) {
+            Debug.LogWarning("WHY THE FUCK ARE YOU BOTH AWAKE??");
+        }
+		if ( PhysicsObject.transform.position.x < -40 && !attached) {
             this.spawner.Reclaim(this);
         }
     }
 
     public void BlownRoot() {
-        PhysicsObject.GetComponent<SpriteRenderer>().color = Color.black;
+        PhysicsObject.GetComponent<SpriteRenderer>().color = DisabledColor;
         VisObject.GetComponent<SpriteRenderer>().sortingOrder = -1;
-        VisObject.GetComponent<SpriteRenderer>().color = Color.black;
+        VisObject.GetComponent<SpriteRenderer>().color = DisabledColor;
         PhysicsObject.GetComponent<SpriteRenderer>().sortingOrder = -1;
         PhysicsObject.transform.position = VisObject.transform.position;
         PhysicsObject.transform.rotation = VisObject.transform.rotation;
@@ -140,9 +151,9 @@ public class Asteroid : MonoBehaviour {
 
     public static void blownParent(Asteroid asteroid) {
         asteroid.VisObject.layer = 9;
-        asteroid.VisObject.GetComponent<SpriteRenderer>().color = Color.black;
+        asteroid.VisObject.GetComponent<SpriteRenderer>().color = asteroid.DisabledColor;
         asteroid.VisObject.GetComponent<SpriteRenderer>().sortingOrder = -1;
-        asteroid.PhysicsObject.GetComponent<SpriteRenderer>().color = Color.black;
+        asteroid.PhysicsObject.GetComponent<SpriteRenderer>().color = asteroid.DisabledColor;
         asteroid.PhysicsObject.GetComponent<SpriteRenderer>().sortingOrder = -1;
         asteroid.blownUp = true;
     }

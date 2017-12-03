@@ -151,10 +151,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe77001aae2f0ca4d8ce2595020cb458, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartingAsteroidCount: 5
+  StartingAsteroidCount: 120
   Asteroid: {fileID: 1435950628478990, guid: 561409f5e85ea894ea16a5afb692819d, type: 2}
   Loss: 0
-  MaxAsteroidsSpawned: 5
+  MaxAsteroidsSpawned: 80
   AsteroidSpawnRate: 0.3
   StartingMineCount: 20
   Mine: {fileID: 1076175408259730, guid: a27ae6706b54e924ea1d9d3b4df4c497, type: 2}
@@ -198,10 +198,6 @@ Prefab:
     - target: {fileID: 4295941454701888, guid: 561409f5e85ea894ea16a5afb692819d, type: 2}
       propertyPath: m_RootOrder
       value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 1435950628478990, guid: 561409f5e85ea894ea16a5afb692819d, type: 2}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 561409f5e85ea894ea16a5afb692819d, type: 2}
@@ -441,7 +437,7 @@ Prefab:
     - target: {fileID: 114244577682269678, guid: f781966e254205848bfe449c11188043,
         type: 2}
       propertyPath: StartingAsteroidCount
-      value: 5
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 114244577682269678, guid: f781966e254205848bfe449c11188043,
         type: 2}
@@ -451,7 +447,7 @@ Prefab:
     - target: {fileID: 114244577682269678, guid: f781966e254205848bfe449c11188043,
         type: 2}
       propertyPath: MaxAsteroidsSpawned
-      value: 5
+      value: 80
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f781966e254205848bfe449c11188043, type: 2}

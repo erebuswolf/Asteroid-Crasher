@@ -18,6 +18,7 @@ public class PlayerControlScript : MonoBehaviour {
 
     public float Bound;
 
+    int asteroidCount;
     // Use this for initialization
     void Start () {
 		
@@ -27,10 +28,24 @@ public class PlayerControlScript : MonoBehaviour {
         return 1;
     }
 	
+    static int GetAsteroidCount(GameObject obj) {
+        int count = 0;
+        foreach (Transform child in obj.transform) {
+            Asteroid asteroid = child.gameObject.GetComponent<Asteroid>();
+            if (asteroid != null) {
+                count += GetAsteroidCount(asteroid.VisObject);
+                count++;
+            }
+        }
+        return count;
+    }
+
 	// Update is called once per frame
 	void Update () {
+        asteroidCount = GetAsteroidCount(this.gameObject);
         handleMovement();
         handleRotation();
+        //
     }
 
     void handleRotation() {
@@ -48,10 +63,12 @@ public class PlayerControlScript : MonoBehaviour {
             }
         }
 
+        float moveVel = AngularVel * (1f - Mathf.Lerp(0, .9f, Mathf.Clamp01(asteroidCount / 20f)));
+
         if (rotateRight && !rotateLeft) {
-            RigidBody.angularVelocity = -AngularVel;
+            RigidBody.angularVelocity = -moveVel;
         } else if (rotateLeft && !rotateRight) {
-            RigidBody.angularVelocity = AngularVel;
+            RigidBody.angularVelocity = moveVel;
         } else {
             RigidBody.angularVelocity = 0;
         }
@@ -59,7 +76,6 @@ public class PlayerControlScript : MonoBehaviour {
     }
 
     void handleMovement() {
-
         bool moveUp = false;
         bool moveDown = false;
         foreach (KeyCode k in UpCodes) {
@@ -74,10 +90,12 @@ public class PlayerControlScript : MonoBehaviour {
             }
         }
 
+        float moveVel = UpVel * (1f - Mathf.Lerp(0,.8f, Mathf.Clamp01(asteroidCount/20f)));
+
         if (moveUp && !moveDown) {
-            RigidBody.velocity = new Vector3(0, UpVel, 0);
+            RigidBody.velocity = new Vector3(0, moveVel, 0);
         } else if (moveDown && !moveUp) {
-            RigidBody.velocity = new Vector3(0, -UpVel);
+            RigidBody.velocity = new Vector3(0, -moveVel);
         } else {
             RigidBody.velocity = new Vector3(0, 0);
         }
