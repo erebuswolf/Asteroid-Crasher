@@ -58,7 +58,13 @@ public class PlayerControlScript : MonoBehaviour {
 
     // Function to remove all asteroids from the player.
     void ShedAsteroids() {
-
+        foreach(Transform child in gameObject.transform) {
+            Asteroid asteroid = child.gameObject.GetComponent<Asteroid>();
+            if (asteroid != null) {
+                asteroid.transform.position = new Vector3(-50, 0, 0);
+                asteroid.BlowUp();
+            }
+        }
     }
 
     public void resetToNextLevel() {
