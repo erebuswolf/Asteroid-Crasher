@@ -125,7 +125,7 @@ MonoBehaviour:
   LeftCodes: 6100000014010000
   UpVel: 20
   VelMassRatio: 20
-  AngularVel: 500
+  AngularVel: 250
   Bound: 10
 --- !u!212 &212906983324358730
 SpriteRenderer:

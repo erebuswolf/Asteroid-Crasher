@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Mine : MonoBehaviour {
-
+    public SpriteRenderer MineSprite;
     bool blown = false;
     public Rigidbody2D rigidBody;
 
@@ -38,6 +38,7 @@ public class Mine : MonoBehaviour {
             blown = true;
             Explosion.SetActive(true);
             ClearVel();
+            MineSprite.gameObject.SetActive(false);
         }
     }
 
@@ -49,6 +50,7 @@ public class Mine : MonoBehaviour {
         rigidBody.velocity = getStartVel();
         rigidBody.angularVelocity = getStartAngularVel();
         blown = false;
+        MineSprite.gameObject.SetActive(true);
     }
 
     public void ReturnToSpawner() {

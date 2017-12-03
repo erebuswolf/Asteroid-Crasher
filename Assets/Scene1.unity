@@ -376,10 +376,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 1076175408259730, guid: a27ae6706b54e924ea1d9d3b4df4c497, type: 2}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a27ae6706b54e924ea1d9d3b4df4c497, type: 2}
   m_IsPrefabParent: 0
@@ -441,6 +437,21 @@ Prefab:
     - target: {fileID: 1214534537260440, guid: f781966e254205848bfe449c11188043, type: 2}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114244577682269678, guid: f781966e254205848bfe449c11188043,
+        type: 2}
+      propertyPath: StartingAsteroidCount
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 114244577682269678, guid: f781966e254205848bfe449c11188043,
+        type: 2}
+      propertyPath: AsteroidSpawnRate
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114244577682269678, guid: f781966e254205848bfe449c11188043,
+        type: 2}
+      propertyPath: MaxAsteroidsSpawned
+      value: 80
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f781966e254205848bfe449c11188043, type: 2}

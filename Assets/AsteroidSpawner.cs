@@ -25,17 +25,18 @@ public class AsteroidSpawner : MonoBehaviour {
         asteroids = new List<GameObject>(StartingAsteroidCount);
         for (int i = 0; i < StartingAsteroidCount; i++) {
             GameObject asteroid = Instantiate(Asteroid);
+            asteroid.name = "asteroid " + i;
             asteroid.GetComponent<Asteroid>().SetSpawner(this);
             asteroid.SetActive(false);
             asteroids.Add(asteroid);
             asteroid.transform.parent = this.transform;
         }
         StartCoroutine(AsteroidSpawn());
-
-
+        
         mines = new List<GameObject>(StartingMineCount);
         for (int i = 0; i < StartingMineCount; i++) {
             GameObject mine = Instantiate(Mine);
+            mine.name = "mine " + i;
             mine.GetComponent<Mine>().SetSpawner(this);
             mine.SetActive(false);
             mines.Add(mine);

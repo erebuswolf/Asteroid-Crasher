@@ -61,7 +61,8 @@ public class Asteroid : MonoBehaviour {
         VisObject.SetActive(false);
         rigidBody.velocity = getStartVel();
         rigidBody.angularVelocity = getStartAngularVel();
-        this.GetComponentInChildren<SpriteRenderer>().color = Color.white;
+        PhysicsObject.GetComponent<SpriteRenderer>().color = Color.white;
+        PhysicsObject.GetComponent<AsteroidPhysics>().Destroyed = false;
     }
 
     void ClearVel() {
@@ -77,13 +78,31 @@ public class Asteroid : MonoBehaviour {
     }
 
     public void BlownParent() {
-        this.VisObject.layer = 9;
-        this.GetComponentInChildren<SpriteRenderer>().color = Color.black;
+        PhysicsObject.GetComponent<SpriteRenderer>().color = Color.black;
+        PhysicsObject.transform.position = VisObject.transform.position;
+        PhysicsObject.transform.rotation = VisObject.transform.rotation;
+        PhysicsObject.SetActive(true);
+        PhysicsObject.GetComponent<AsteroidPhysics>().Destroyed = true;
+        VisObject.SetActive(false);
+        rigidBody.velocity = getStartVel();
+    }
+
+    void RecursiveSearch(GameObject obj) {
+        Asteroid asteroid = obj.GetComponent<Asteroid>();
+        if (asteroid != null) {
+            Debug.LogWarning("found asteroid");
+            asteroid.transform.SetParent(null);
+            asteroid.attached = false;
+            asteroid.BlownParent();
+        }
+
+        foreach (Transform child in obj.transform) {
+            RecursiveSearch(child.gameObject);
+        }
     }
 
     public void BlowUp() {
-
-        foreach (Transform child in transform) {
+        /*foreach (Transform child in transform) {
             if (transform.gameObject == PhysicsObject || transform.gameObject == VisObject) {
                 continue;
             }
@@ -92,9 +111,11 @@ public class Asteroid : MonoBehaviour {
                 Debug.LogWarning("found asteroid");
                 asteroid.BlownParent();
                 child.SetParent(null);
+                asteroid.attached = false;
             }
-        }
+        }*/
+        RecursiveSearch(this.gameObject);
         attached = false;
-        this.gameObject.SetActive(false);
+        //this.gameObject.SetActive(false);
     }
 }

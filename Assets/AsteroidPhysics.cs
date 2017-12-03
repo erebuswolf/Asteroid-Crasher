@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AsteroidPhysics : MonoBehaviour {
     public Asteroid asteroid;
+    public bool Destroyed = false;
     // Use this for initialization
     void Start() {
     }
@@ -14,10 +15,16 @@ public class AsteroidPhysics : MonoBehaviour {
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
+        if (Destroyed) {
+            return;
+        }
         asteroid.PhysicsTrigger(collision);
     }
 
     public void BlowUp() {
+        if (Destroyed) {
+            return;
+        }
         asteroid.BlowUp();
     }
 }
