@@ -11,6 +11,7 @@ public class PlayerControlScript : MonoBehaviour {
     public List<KeyCode> RightCodes;
     public List<KeyCode> LeftCodes;
 
+    public GameObject Particles;
     public float UpVel;
     public float VelMassRatio;
 
@@ -19,6 +20,7 @@ public class PlayerControlScript : MonoBehaviour {
     public float Bound;
 
     public SpriteRenderer sprite;
+    public SpriteRenderer sprite2;
 
     public Color DeathColor;
 
@@ -83,13 +85,16 @@ public class PlayerControlScript : MonoBehaviour {
         dead = true;
         this.gameObject.layer = 11;
         sprite.color = DeathColor;
+        Particles.SetActive(false);
+        sprite2.gameObject.SetActive(false);
         RigidBody.velocity = Vector3.zero;
         yield return new WaitForSeconds(2);
         this.transform.position = new Vector2(30, 0);
         dead = false;
         this.gameObject.layer = 8;
         sprite.color = Color.white;
-
+        Particles.SetActive(true);
+        sprite2.gameObject.SetActive(true);
     }
 
     void FailedLevel() {
