@@ -122,6 +122,7 @@ public class PlayerControlScript : MonoBehaviour {
         endRoutine = true;
         Vector3 curPos = this.transform.position;
         curPos.x = 25;
+        curPos.y = 0;
         this.transform.position = curPos;
 
         RigidBody.velocity = new Vector2(-20, 0);

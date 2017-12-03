@@ -9,6 +9,7 @@ public class UIController : MonoBehaviour {
     public List<GameObject> LevelInstructions;
     public GameObject LevelFail;
     public GameObject Victory;
+    public GameObject Credits;
 
     public GameManager manager;
 
@@ -19,6 +20,10 @@ public class UIController : MonoBehaviour {
     public void Success() {
         Victory.SetActive(true);
 
+    }
+
+    public void ShowCredits() {
+        Credits.SetActive(true);
     }
 
     public void HideSuccess() {

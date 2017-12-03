@@ -120,6 +120,24 @@ public class AsteroidSpawner : MonoBehaviour {
             }else if (roll< .5) {
                 return Asteroid.TYPE.ICE;
             }
+        } else if (level == 5) {
+            float roll = Random.Range(0f, 1f);
+            if (roll < .1) {
+                return Asteroid.TYPE.IRON;
+            } else if (roll < .2) {
+                return Asteroid.TYPE.GOLD;
+            } else if (roll < .4) {
+                return Asteroid.TYPE.ICE;
+            }
+        } else if (level >= 6) {
+            float roll = Random.Range(0f, 1f);
+            if (roll < .25) {
+                return Asteroid.TYPE.IRON;
+            } else if (roll < .5) {
+                return Asteroid.TYPE.GOLD;
+            } else if (roll < .75) {
+                return Asteroid.TYPE.ICE;
+            }
         }
         return Asteroid.TYPE.NORMAL;
     }

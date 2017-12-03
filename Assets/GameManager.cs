@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
     public AsteroidSpawner Spawner;
@@ -38,6 +39,10 @@ public class GameManager : MonoBehaviour {
                 return CheckWinConditionLevel4(player);
             case 4:
                 return CheckWinConditionLevel5(player);
+            case 5:
+                return CheckWinConditionLevel6(player);
+            case 6:
+                return CheckWinConditionLevel7(player);
             default:
                 return false;
         }
@@ -78,6 +83,29 @@ public class GameManager : MonoBehaviour {
             player.AsteroidCount(Asteroid.TYPE.IRON) >= 3 
             && player.CheckVictory();
     }
+    public bool CheckWinConditionLevel6(PlayerControlScript player) {
+        if (player.CheckVictory() && (player.AsteroidCount(Asteroid.TYPE.ICE) < 2
+            || player.AsteroidCount(Asteroid.TYPE.IRON) < 1 
+            || player.AsteroidCount(Asteroid.TYPE.GOLD) < 1)) {
+            FailedLevel();
+        }
+        return player.AsteroidCount(Asteroid.TYPE.ICE) >= 2 &&
+            player.AsteroidCount(Asteroid.TYPE.IRON) >= 1 &&
+            player.AsteroidCount(Asteroid.TYPE.GOLD) >= 1
+            && player.CheckVictory();
+    }
+
+    public bool CheckWinConditionLevel7(PlayerControlScript player) {
+        if (player.CheckVictory() && (player.AsteroidCount(Asteroid.TYPE.ICE) < 4
+            || player.AsteroidCount(Asteroid.TYPE.IRON) < 4
+            || player.AsteroidCount(Asteroid.TYPE.GOLD) < 4)) {
+            FailedLevel();
+        }
+        return player.AsteroidCount(Asteroid.TYPE.ICE) >= 4 &&
+            player.AsteroidCount(Asteroid.TYPE.IRON) >= 4 &&
+            player.AsteroidCount(Asteroid.TYPE.GOLD) >= 4
+            && player.CheckVictory();
+    }
 
 
 
@@ -95,14 +123,21 @@ public class GameManager : MonoBehaviour {
 
     IEnumerator PlayLevel() {
         do {
-            if (failed) {
+            if (failed && currentLevel != 7) {
                 uiController.FailedLevel();
                 yield return new WaitForSeconds(3);
                 uiController.ClearFail();
+            }else {
+                yield return new WaitForSeconds(3);
             }
             uiController.StartLevel(currentLevel);
-            yield return new WaitForSeconds(3);
-            uiController.HideGameUI(currentLevel);
+            if (currentLevel != 7) {
+                yield return new WaitForSeconds(3);
+                uiController.HideGameUI(currentLevel);
+            } else {
+                yield return new WaitForSeconds(3);
+            }
+
             if (failed) {
                 yield return new WaitForSeconds(2f);
             }
@@ -124,32 +159,33 @@ public class GameManager : MonoBehaviour {
             }
             Spawner.StopAsteroids();
 
-            i = 0;
-            while (i < 10) {
-                yield return new WaitForSeconds(.5f);
-                i++;
-                if (failed) {
-                    break;
+            if (currentLevel != 7) {
+                i = 0;
+                while (i < 10) {
+                    yield return new WaitForSeconds(.5f);
+                    i++;
+                    if (failed) {
+                        break;
+                    }
                 }
-            }
-            if (failed) {
-                continue;
-            }
-            Spawner.StopMines();
-            i = 0;
-            while (i < 6) {
-                yield return new WaitForSeconds(.5f);
                 if (failed) {
-                    break;
+                    continue;
                 }
-                i++;
-            }
-            if (failed) {
-                continue;
-            }
+                Spawner.StopMines();
+                i = 0;
+                while (i < 6) {
+                    yield return new WaitForSeconds(.5f);
+                    if (failed) {
+                        break;
+                    }
+                    i++;
+                }
+                if (failed) {
+                    continue;
+                }
 
-            Spawner.SpawnGate(GateScale[currentLevel]);
-
+                Spawner.SpawnGate(GateScale[currentLevel]);
+            }
             i = 0;
             while (!CheckWinCondition(currentLevel, Player) && !failed) {
                 yield return new WaitForSeconds(.1f);
@@ -169,7 +205,8 @@ public class GameManager : MonoBehaviour {
         if (currentLevel< GateScale.Count) {
             StartCoroutine(PlayLevel());
         } else {
-            // roll credits
+            uiController.ShowCredits();
+            Spawner.StartSpawning();
         }
     }
 
@@ -179,13 +216,17 @@ public class GameManager : MonoBehaviour {
         uiController.HideStartUI();
         StartCoroutine(PlayLevel());
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update() {
         if (!started && Input.GetKey(KeyCode.Space)) {
             started = true;
             uiController.HideStartUI();
             StartCoroutine(PlayLevel());
+        }
+
+        if (Input.GetKey(KeyCode.Escape)) {
+            SceneManager.LoadScene("Scene1");
         }
 
         if (failed && !resetOnFail) {
