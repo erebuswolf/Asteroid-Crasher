@@ -8,20 +8,43 @@ public class AsteroidSpawner : MonoBehaviour {
     List<GameObject> asteroids;
     public GameObject Asteroid;
     int createdAsteroidCount;
-    public bool Loss;
     public int MaxAsteroidsSpawned;
     public float AsteroidSpawnRate = .3f;
-
-
+    
     public int StartingMineCount;
     List<GameObject> mines;
     public GameObject Mine;
     int createdMineCount;
     public int MaxMinesSpawned;
     public float MineSpawnRate = 1f;
+    
+    bool stopAsteroids;
+    bool stopMines;
+
+    public GameObject GatePrefab;
+
+
+    public GameObject Gamegate;
+
+    public void StopMines() {
+        stopMines = true;
+    }
+
+    public void StopAsteroids() {
+        stopAsteroids = true;
+    }
+
+    public void SpawnGate(float scale) {
+        Gamegate.GetComponent<Gate>().CreateAsNew();
+        Gamegate.SetActive(true);
+        Gamegate.GetComponent<Gate>().StartEnd();
+    }
 
     // Use this for initialization
     void Start () {
+        Gamegate = Instantiate(GatePrefab);
+        Gamegate.SetActive(false);
+
         asteroids = new List<GameObject>(StartingAsteroidCount);
         for (int i = 0; i < StartingAsteroidCount; i++) {
             GameObject asteroid = Instantiate(Asteroid);
@@ -31,7 +54,6 @@ public class AsteroidSpawner : MonoBehaviour {
             asteroids.Add(asteroid);
             asteroid.transform.parent = this.transform;
         }
-        StartCoroutine(AsteroidSpawn());
         
         mines = new List<GameObject>(StartingMineCount);
         for (int i = 0; i < StartingMineCount; i++) {
@@ -42,11 +64,15 @@ public class AsteroidSpawner : MonoBehaviour {
             mines.Add(mine);
             mine.transform.parent = this.transform;
         }
+    }
+
+    public void StartSpawning() {
+        StartCoroutine(AsteroidSpawn());
         StartCoroutine(MineSpawn());
     }
 
     IEnumerator MineSpawn() {
-        while (!Loss) {
+        while (!stopMines) {
             if (createdMineCount < MaxMinesSpawned) {
                 spawnMine();
             }
@@ -55,7 +81,7 @@ public class AsteroidSpawner : MonoBehaviour {
     }
 
     IEnumerator AsteroidSpawn() {
-        while(!Loss) {
+        while(!stopAsteroids) {
             if (createdAsteroidCount < MaxAsteroidsSpawned) {
                 spawnAsteroid();
             }

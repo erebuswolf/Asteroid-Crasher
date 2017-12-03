@@ -23,7 +23,7 @@ public class Mine : MonoBehaviour {
         return new Vector3(-startVel, 0, 0);
     }
     float getStartAngularVel() {
-        return 100;
+        return Random.Range(-100f, 100f);
     }
 
     // Update is called once per frame

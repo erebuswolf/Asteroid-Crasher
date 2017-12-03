@@ -32,7 +32,7 @@ public class Asteroid : MonoBehaviour {
     }
 
     float getStartAngularVel() {
-        return 100;
+        return Random.Range(-100f,100f);
     }
 
     public void PhysicsTrigger(Collider2D collision) {

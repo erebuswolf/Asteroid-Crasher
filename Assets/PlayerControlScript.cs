@@ -18,11 +18,21 @@ public class PlayerControlScript : MonoBehaviour {
 
     public float Bound;
 
+    bool endGame;
+
+    bool passedGate;
+    
+    public GameManager manager;
+
+    public void PassedGate() {
+        passedGate = true;
+    }
+
     int asteroidCount;
     // Use this for initialization
     void Start () {
-		
-	}
+
+    }
 
     float GetMass() {
         return 1;
@@ -42,10 +52,19 @@ public class PlayerControlScript : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+        if (!manager.GameStarted()) {
+            return;
+        }
         asteroidCount = GetAsteroidCount(this.gameObject);
         handleMovement();
         handleRotation();
-        //
+        checkVictory();
+    }
+
+    void checkVictory() {
+        if (transform.position.x > 21 && passedGate) {
+            Debug.LogWarning("victory");
+        }
     }
 
     void handleRotation() {
@@ -75,6 +94,10 @@ public class PlayerControlScript : MonoBehaviour {
 
     }
 
+    public void EndGame() {
+        endGame = true;
+    }
+
     void handleMovement() {
         bool moveUp = false;
         bool moveDown = false;
@@ -92,16 +115,18 @@ public class PlayerControlScript : MonoBehaviour {
 
         float moveVel = UpVel * (1f - Mathf.Lerp(0,.8f, Mathf.Clamp01(asteroidCount/20f)));
 
+        float xVel = endGame? 7 : 0;
+
         if (moveUp && !moveDown) {
-            RigidBody.velocity = new Vector3(0, moveVel, 0);
+            RigidBody.velocity = new Vector3(xVel, moveVel, 0);
         } else if (moveDown && !moveUp) {
-            RigidBody.velocity = new Vector3(0, -moveVel);
+            RigidBody.velocity = new Vector3(xVel, -moveVel);
         } else {
-            RigidBody.velocity = new Vector3(0, 0);
+            RigidBody.velocity = new Vector3(xVel, 0);
         }
 
         if (Mathf.Abs(this.transform.position.y) > Bound) {
-            RigidBody.velocity = new Vector3(0, 0);
+            RigidBody.velocity = new Vector3(xVel, 0);
             Vector3 pos = this.transform.position;
             pos.y = Mathf.Sign(pos.y) * Bound;
             this.transform.position = pos;
