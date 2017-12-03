@@ -25,7 +25,7 @@ public class Asteroid : MonoBehaviour {
         rigidBody.angularVelocity = getStartAngularVel();
     }
 	
-    Vector3 getStartVel() {
+    public Vector3 getStartVel() {
         return new Vector3(-startVel, 0, 0);
     }
 
@@ -45,8 +45,7 @@ public class Asteroid : MonoBehaviour {
             PhysicsObject.SetActive(false);
 
             VisObject.SetActive(true);
-            VisObject.transform.position = PhysicsObject.transform.position;
-            VisObject.transform.rotation = PhysicsObject.transform.rotation;
+            SetVisToPhysPos();
 
             VisObject.layer = 8;
             attached = true;
@@ -57,6 +56,12 @@ public class Asteroid : MonoBehaviour {
 
     public void PromoteChildAsteroid() {
         foreach(Transform child in PhysicsObject.transform) {
+            Asteroid asteroid = child.gameObject.GetComponent<Asteroid>();
+            asteroid.SwapVisForPhys();
+            asteroid.transform.parent = null;
+        }
+
+        foreach (Transform child in VisObject.transform) {
             Asteroid asteroid = child.gameObject.GetComponent<Asteroid>();
             asteroid.SwapVisForPhys();
             asteroid.transform.parent = null;
@@ -96,6 +101,8 @@ public class Asteroid : MonoBehaviour {
         rigidBody.angularVelocity = getStartAngularVel();
         PhysicsObject.GetComponent<SpriteRenderer>().color = Color.white;
         VisObject.GetComponent<SpriteRenderer>().color = Color.white;
+        VisObject.GetComponent<SpriteRenderer>().sortingOrder = 0;
+        PhysicsObject.GetComponent<SpriteRenderer>().sortingOrder = 0;
         PhysicsObject.GetComponent<AsteroidPhysics>().Destroyed = false;
         blownUp = false;
     }
@@ -114,7 +121,9 @@ public class Asteroid : MonoBehaviour {
 
     public void BlownRoot() {
         PhysicsObject.GetComponent<SpriteRenderer>().color = Color.black;
+        VisObject.GetComponent<SpriteRenderer>().sortingOrder = -1;
         VisObject.GetComponent<SpriteRenderer>().color = Color.black;
+        PhysicsObject.GetComponent<SpriteRenderer>().sortingOrder = -1;
         PhysicsObject.transform.position = VisObject.transform.position;
         PhysicsObject.transform.rotation = VisObject.transform.rotation;
         PhysicsObject.SetActive(true);
@@ -132,7 +141,9 @@ public class Asteroid : MonoBehaviour {
     public static void blownParent(Asteroid asteroid) {
         asteroid.VisObject.layer = 9;
         asteroid.VisObject.GetComponent<SpriteRenderer>().color = Color.black;
+        asteroid.VisObject.GetComponent<SpriteRenderer>().sortingOrder = -1;
         asteroid.PhysicsObject.GetComponent<SpriteRenderer>().color = Color.black;
+        asteroid.PhysicsObject.GetComponent<SpriteRenderer>().sortingOrder = -1;
         asteroid.blownUp = true;
     }
 
@@ -140,6 +151,7 @@ public class Asteroid : MonoBehaviour {
         Asteroid asteroid = obj.GetComponent<Asteroid>();
         if (asteroid != null) {
             asteroid.attached = false;
+            asteroid.blownUp = true;
             // only set parent false on first found and only turn on physics for first found.!!!!!
             if (!found) {
                 asteroid.transform.SetParent(null);
@@ -154,6 +166,11 @@ public class Asteroid : MonoBehaviour {
         foreach (Transform child in obj.transform) {
             RecursiveSearch(child.gameObject, found);
         }
+    }
+
+    public void SetVisToPhysPos() {
+        VisObject.transform.position = PhysicsObject.transform.position;
+        VisObject.transform.rotation = PhysicsObject.transform.rotation;
     }
 
     public void BlowUp() {
