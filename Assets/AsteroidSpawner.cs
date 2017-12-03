@@ -84,12 +84,15 @@ public class AsteroidSpawner : MonoBehaviour {
     }
 
     public void Reclaim(Asteroid asteroid) {
+        asteroid.CreateAsNew();
+        asteroid.transform.parent = null;
         asteroid.gameObject.SetActive(false);
         asteroids.Add(asteroid.gameObject);
         createdAsteroidCount--;
     }
 
     public void Reclaim(Mine mine) {
+        mine.CreateAsNew();
         mine.gameObject.SetActive(false);
         mines.Add(mine.gameObject);
         createdMineCount--;

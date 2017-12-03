@@ -13,6 +13,8 @@ public class Asteroid : MonoBehaviour {
 
     bool attached = false;
 
+    bool blownUp;
+
     public void SetSpawner(AsteroidSpawner spawner) {
         this.spawner = spawner;
     }
@@ -36,6 +38,9 @@ public class Asteroid : MonoBehaviour {
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
+        if (blownUp) {
+            return;
+        }
         if (collision.gameObject.layer == 8 && !attached) {
             PhysicsObject.SetActive(false);
 
@@ -43,14 +48,34 @@ public class Asteroid : MonoBehaviour {
             VisObject.transform.position = PhysicsObject.transform.position;
             VisObject.transform.rotation = PhysicsObject.transform.rotation;
 
-            gameObject.layer = 8;
+            VisObject.layer = 8;
             attached = true;
             ClearVel();
             this.transform.parent = collision.gameObject.transform;
         }
     }
 
+    public void PromoteChildAsteroid() {
+        foreach(Transform child in PhysicsObject.transform) {
+            Asteroid asteroid = child.gameObject.GetComponent<Asteroid>();
+            asteroid.SwapVisForPhys();
+            asteroid.transform.parent = null;
+        }
+    }
+
+    public void SwapVisForPhys() {
+        PhysicsObject.transform.position = VisObject.transform.position;
+        PhysicsObject.transform.rotation = VisObject.transform.rotation;
+        foreach (Transform child in VisObject.transform) {
+            child.gameObject.transform.parent = PhysicsObject.transform;
+        }
+        PhysicsObject.SetActive(true);
+        VisObject.SetActive(false);
+        rigidBody.velocity = getStartVel();
+    }
+
     public void CreateAsNew() {
+        PromoteChildAsteroid();
         float yPos = Random.Range(-10f, 10f);
         Vector3 pos = new Vector3(20, yPos, 0);
         this.transform.parent = null;
@@ -58,11 +83,21 @@ public class Asteroid : MonoBehaviour {
         PhysicsObject.SetActive(true);
         PhysicsObject.transform.localPosition = Vector3.zero;
         PhysicsObject.transform.localRotation = Quaternion.identity;
+
+        VisObject.transform.localPosition = Vector3.zero;
+        VisObject.transform.localRotation = Quaternion.identity;
+
+        PhysicsObject.layer = 9;
+        VisObject.layer = 9;
+        this.gameObject.layer = 9;
+
         VisObject.SetActive(false);
         rigidBody.velocity = getStartVel();
         rigidBody.angularVelocity = getStartAngularVel();
         PhysicsObject.GetComponent<SpriteRenderer>().color = Color.white;
+        VisObject.GetComponent<SpriteRenderer>().color = Color.white;
         PhysicsObject.GetComponent<AsteroidPhysics>().Destroyed = false;
+        blownUp = false;
     }
 
     void ClearVel() {
@@ -77,27 +112,47 @@ public class Asteroid : MonoBehaviour {
         }
     }
 
-    public void BlownParent() {
+    public void BlownRoot() {
         PhysicsObject.GetComponent<SpriteRenderer>().color = Color.black;
+        VisObject.GetComponent<SpriteRenderer>().color = Color.black;
         PhysicsObject.transform.position = VisObject.transform.position;
         PhysicsObject.transform.rotation = VisObject.transform.rotation;
         PhysicsObject.SetActive(true);
         PhysicsObject.GetComponent<AsteroidPhysics>().Destroyed = true;
         VisObject.SetActive(false);
+
+        foreach(Transform child in VisObject.transform) {
+            child.gameObject.transform.parent = PhysicsObject.transform;
+        }
+
         rigidBody.velocity = getStartVel();
+        blownUp = true;
     }
 
-    void RecursiveSearch(GameObject obj) {
+    public static void blownParent(Asteroid asteroid) {
+        asteroid.VisObject.layer = 9;
+        asteroid.VisObject.GetComponent<SpriteRenderer>().color = Color.black;
+        asteroid.PhysicsObject.GetComponent<SpriteRenderer>().color = Color.black;
+        asteroid.blownUp = true;
+    }
+
+    static void RecursiveSearch(GameObject obj, bool found) {
         Asteroid asteroid = obj.GetComponent<Asteroid>();
         if (asteroid != null) {
-            Debug.LogWarning("found asteroid");
-            asteroid.transform.SetParent(null);
             asteroid.attached = false;
-            asteroid.BlownParent();
+            // only set parent false on first found and only turn on physics for first found.!!!!!
+            if (!found) {
+                asteroid.transform.SetParent(null);
+                asteroid.attached = false;
+                asteroid.BlownRoot();
+            } else {
+                blownParent(asteroid);
+            }
+            found = true;
         }
 
         foreach (Transform child in obj.transform) {
-            RecursiveSearch(child.gameObject);
+            RecursiveSearch(child.gameObject, found);
         }
     }
 
@@ -114,7 +169,7 @@ public class Asteroid : MonoBehaviour {
                 asteroid.attached = false;
             }
         }*/
-        RecursiveSearch(this.gameObject);
+        RecursiveSearch(this.gameObject, false);
         attached = false;
         //this.gameObject.SetActive(false);
     }
