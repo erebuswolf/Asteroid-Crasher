@@ -32,6 +32,9 @@ public class PlayerControlScript : MonoBehaviour {
 
     public GameManager manager;
 
+    public int AsteroidCount(Asteroid.TYPE type) {
+        return GetAsteroidCount(this.gameObject, type);
+    }
     public int AsteroidCount() {
         return GetAsteroidCount(this.gameObject);
     }
@@ -49,7 +52,21 @@ public class PlayerControlScript : MonoBehaviour {
     float GetMass() {
         return 1;
     }
-	
+
+    static int GetAsteroidCount(GameObject obj, Asteroid.TYPE type) {
+        int count = 0;
+        foreach (Transform child in obj.transform) {
+            Asteroid asteroid = child.gameObject.GetComponent<Asteroid>();
+            if (asteroid != null) {
+                count += GetAsteroidCount(asteroid.VisObject);
+                if(asteroid.type == type) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
     static int GetAsteroidCount(GameObject obj) {
         int count = 0;
         foreach (Transform child in obj.transform) {

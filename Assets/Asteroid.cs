@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Asteroid : MonoBehaviour {
+    public enum TYPE {NORMAL, IRON, CRYSTAL, ICE, PLATINUM, GOLD }
+    public TYPE type;
+
     public Rigidbody2D rigidBody;
-    AsteroidSpawner spawner;
+    public AsteroidSpawner spawner;
 
     public GameObject PhysicsObject;
     public GameObject VisObject;
@@ -16,6 +19,32 @@ public class Asteroid : MonoBehaviour {
     bool attached = false;
 
     bool blownUp;
+
+    public void SetType(TYPE newType) {
+        type = newType;
+        Color newColor = Color.white;
+        switch(type) {
+            case TYPE.IRON:
+                newColor = new Color(255/255f, 69 / 255f, 0);
+                break;
+            case TYPE.CRYSTAL:
+                break;
+            case TYPE.ICE:
+                newColor = new Color(0, 213 / 255f, 255 / 255f);
+                break;
+            case TYPE.PLATINUM:
+                break;
+            case TYPE.GOLD:
+                newColor = new Color(220 / 255f, 255 / 255f, 0);
+                break;
+            case TYPE.NORMAL:
+                break;
+        }
+
+        PhysicsObject.GetComponent<SpriteRenderer>().color = newColor;
+        VisObject.GetComponent<SpriteRenderer>().color = newColor;
+    }
+
 
     public void SetSpawner(AsteroidSpawner spawner) {
         this.spawner = spawner;

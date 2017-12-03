@@ -10,6 +10,7 @@ public class UIController : MonoBehaviour {
     public GameObject LevelFail;
     public GameObject Victory;
 
+    public GameManager manager;
 
     public void HideStartUI() {
         StartUI.SetActive(false);
@@ -31,6 +32,10 @@ public class UIController : MonoBehaviour {
 
     public void ClearFail() {
         LevelFail.SetActive(false);
+    }
+    
+    public void SkipToLevel(int i) {
+        manager.SetLevel(i);
     }
 
     public void StartLevel (int level) {

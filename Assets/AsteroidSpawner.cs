@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class AsteroidSpawner : MonoBehaviour {
 
+    public GameManager manager;
+
     public int StartingAsteroidCount;
     List<GameObject> asteroids;
-    public GameObject Asteroid;
+    public GameObject AsteroidPrefab;
     int createdAsteroidCount;
     public int MaxAsteroidsSpawned;
     public float AsteroidSpawnRate = .3f;
@@ -38,6 +40,8 @@ public class AsteroidSpawner : MonoBehaviour {
         Gamegate.GetComponent<Gate>().CreateAsNew();
         Gamegate.SetActive(true);
         Gamegate.GetComponent<Gate>().StartEnd();
+        Vector3 oldScale = Gamegate.transform.localScale;
+        Gamegate.transform.localScale = scale * oldScale;
     }
 
     public void TriggerVictoryOnGate() {
@@ -53,7 +57,7 @@ public class AsteroidSpawner : MonoBehaviour {
 
         asteroids = new List<GameObject>(StartingAsteroidCount);
         for (int i = 0; i < StartingAsteroidCount; i++) {
-            GameObject asteroid = Instantiate(Asteroid);
+            GameObject asteroid = Instantiate(AsteroidPrefab);
             asteroid.name = "asteroid " + i;
             asteroid.GetComponent<Asteroid>().SetSpawner(this);
             asteroid.SetActive(false);
@@ -97,6 +101,29 @@ public class AsteroidSpawner : MonoBehaviour {
         }
     }
 
+    Asteroid.TYPE getType() {
+        int level = manager.GetLevel();
+        if (level < 2) {
+            return Asteroid.TYPE.NORMAL;
+        } else if (level == 2) {
+            if (Random.Range(0f, 1f) < .2) {
+                return Asteroid.TYPE.IRON;
+            }
+        } else if (level == 3) {
+            if (Random.Range(0f, 1f) < .1) {
+                return Asteroid.TYPE.GOLD;
+            }
+        } else if (level == 4) {
+            float roll = Random.Range(0f, 1f);
+            if (roll < .2) {
+                return Asteroid.TYPE.IRON;
+            }else if (roll< .5) {
+                return Asteroid.TYPE.ICE;
+            }
+        }
+        return Asteroid.TYPE.NORMAL;
+    }
+
     void spawnMine() {
         if (mines.Count > 0) {
             createdMineCount++;
@@ -114,6 +141,7 @@ public class AsteroidSpawner : MonoBehaviour {
             asteroids.RemoveAt(0);
             asteroidToSpawn.SetActive(true);
             asteroidToSpawn.GetComponent<Asteroid>().CreateAsNew();
+            asteroidToSpawn.GetComponent<Asteroid>().SetType(getType());
         }
     }
 

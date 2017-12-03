@@ -22,12 +22,22 @@ public class GameManager : MonoBehaviour {
         return started;
     }
 
+    public int GetLevel() {
+        return currentLevel;
+    }
+
     public bool CheckWinCondition(int level, PlayerControlScript player) {
         switch(level) {
             case 0:
                 return CheckWinConditionLevel1(player);
             case 1:
                 return CheckWinConditionLevel2(player);
+            case 2:
+                return CheckWinConditionLevel3(player);
+            case 3:
+                return CheckWinConditionLevel4(player);
+            case 4:
+                return CheckWinConditionLevel5(player);
             default:
                 return false;
         }
@@ -46,8 +56,33 @@ public class GameManager : MonoBehaviour {
         return player.AsteroidCount() >= 5 && player.CheckVictory();
     }
 
-	// Use this for initialization
-	void Start () {
+    public bool CheckWinConditionLevel3(PlayerControlScript player) {
+        if (player.CheckVictory() && player.AsteroidCount(Asteroid.TYPE.IRON) < 5) {
+            FailedLevel();
+        }
+        return player.AsteroidCount(Asteroid.TYPE.IRON) >= 5 && player.CheckVictory();
+    }
+
+    public bool CheckWinConditionLevel4(PlayerControlScript player) {
+        if (player.CheckVictory() && player.AsteroidCount(Asteroid.TYPE.GOLD) < 2) {
+            FailedLevel();
+        }
+        return player.AsteroidCount(Asteroid.TYPE.GOLD) >= 2 && player.CheckVictory();
+    }
+    public bool CheckWinConditionLevel5(PlayerControlScript player) {
+        if (player.CheckVictory() && (player.AsteroidCount(Asteroid.TYPE.ICE) < 5
+            || player.AsteroidCount(Asteroid.TYPE.IRON) < 3)) {
+            FailedLevel();
+        }
+        return player.AsteroidCount(Asteroid.TYPE.ICE) >= 5 && 
+            player.AsteroidCount(Asteroid.TYPE.IRON) >= 3 
+            && player.CheckVictory();
+    }
+
+
+
+    // Use this for initialization
+    void Start () {
 	}
 
     public void StartNextLevel() {
@@ -131,11 +166,18 @@ public class GameManager : MonoBehaviour {
         currentLevel++;
         uiController.HideSuccess();
 
-        if (currentLevel<= GateScale.Count) {
+        if (currentLevel< GateScale.Count) {
             StartCoroutine(PlayLevel());
         } else {
             // roll credits
         }
+    }
+
+    public void SetLevel(int i) {
+        currentLevel = i;
+        started = true;
+        uiController.HideStartUI();
+        StartCoroutine(PlayLevel());
     }
 	
 	// Update is called once per frame

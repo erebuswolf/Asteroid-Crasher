@@ -24,6 +24,7 @@ public class Gate : MonoBehaviour {
 
     public void CreateAsNew() {
         this.transform.position  = new Vector3(25, 0, 0);
+        this.transform.localScale = new Vector3(4, 4, 4);
     }
 
     public void StartEnd() {
