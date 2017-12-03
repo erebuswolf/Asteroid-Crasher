@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GateCollisionCheck : MonoBehaviour {
 
-    public GameObject explosion;
+    public ParticleSystem explosion;
 
     bool exploding;
 
@@ -20,9 +20,7 @@ public class GateCollisionCheck : MonoBehaviour {
 
     IEnumerator explode() {
         exploding = true;
-        explosion.SetActive(true);
-        yield return new WaitForSeconds(.5f);
-        explosion.SetActive(false);
+        explosion.Play();
         yield return new WaitForSeconds(5f);
         exploding = false;
     }

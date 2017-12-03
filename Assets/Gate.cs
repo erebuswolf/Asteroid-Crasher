@@ -25,6 +25,9 @@ public class Gate : MonoBehaviour {
     public void CreateAsNew() {
         this.transform.position  = new Vector3(25, 0, 0);
         this.transform.localScale = new Vector3(4, 4, 4);
+        this.transform.localRotation = Quaternion.identity;
+        rigidBody.velocity = Vector3.zero;
+        rigidBody.angularVelocity = 0;
     }
 
     public void StartEnd() {
@@ -54,6 +57,7 @@ public class Gate : MonoBehaviour {
     }
 
     IEnumerator victorySequence() {
+        yield return new WaitForSeconds(3f);
         runningVictory = true;
         rigidBody.velocity = new Vector3(-15, 0, 0);
         yield return new WaitForSeconds(20f);

@@ -9,6 +9,8 @@ public class Asteroid : MonoBehaviour {
     public Rigidbody2D rigidBody;
     public AsteroidSpawner spawner;
 
+    public AudioSource Bonk;
+
     public GameObject PhysicsObject;
     public GameObject VisObject;
 
@@ -73,6 +75,7 @@ public class Asteroid : MonoBehaviour {
             return;
         }
         if (collision.gameObject.layer == 8 && !attached) {
+            Bonk.Play();
             PhysicsObject.SetActive(false);
 
             VisObject.SetActive(true);

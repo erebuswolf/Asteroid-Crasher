@@ -48,8 +48,11 @@ public class Explosion : MonoBehaviour {
     }
 
     IEnumerator BoomTimeout() {
-        yield return new WaitForSeconds(.2f);
+        yield return new WaitForSeconds(.1f);
+        this.gameObject.GetComponent<CircleCollider2D>().enabled = false;
+        yield return new WaitForSeconds(3f);
         this.gameObject.SetActive(false);
+        this.gameObject.GetComponent<CircleCollider2D>().enabled = true;
         this.GetComponentInParent<Mine>().ReturnToSpawner();
     }
 }

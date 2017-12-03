@@ -6,6 +6,9 @@ public class Mine : MonoBehaviour {
     public SpriteRenderer MineSprite;
     bool blown = false;
     public Rigidbody2D rigidBody;
+    public ParticleSystem ps;
+
+    public AudioSource boomSound;
 
     public GameObject Explosion;
 
@@ -35,8 +38,10 @@ public class Mine : MonoBehaviour {
 
     public void BlowUp() {
         if (!blown) {
+            boomSound.Play();
             blown = true;
             Explosion.SetActive(true);
+            ps.Play();
             ClearVel();
             MineSprite.gameObject.SetActive(false);
         }
