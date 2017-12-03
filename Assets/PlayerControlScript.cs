@@ -64,11 +64,13 @@ public class PlayerControlScript : MonoBehaviour {
 
     IEnumerator deathRoutine() {
         dead = true;
+        this.gameObject.layer = 11;
         sprite.color = DeathColor;
         RigidBody.velocity = Vector3.zero;
         yield return new WaitForSeconds(2);
         this.transform.position = new Vector2(30, 0);
         dead = false;
+        this.gameObject.layer = 8;
         sprite.color = Color.white;
 
     }
@@ -79,12 +81,11 @@ public class PlayerControlScript : MonoBehaviour {
 
     // Function to remove all asteroids from the player.
     void ShedAsteroids() {
-        foreach(Transform child in gameObject.transform) {
-            Asteroid asteroid = child.gameObject.GetComponent<Asteroid>();
-            if (asteroid != null) {
-                asteroid.transform.position = new Vector3(-50, 0, 0);
-                asteroid.BlowUp();
-            }
+        var asteroids =  GetComponentsInChildren<Asteroid>();
+        foreach(Asteroid asteroid in asteroids) {
+            asteroid.transform.parent = null;
+            asteroid.transform.position = new Vector3(-50, 0, 0);
+            asteroid.BlowUp();
         }
     }
 
@@ -194,6 +195,9 @@ public class PlayerControlScript : MonoBehaviour {
     }
 
     public void BlowUp() {
+        if (dead) {
+            return;
+        }
         StartCoroutine(deathRoutine());
         FailedLevel();
         // Animation for blowing up.

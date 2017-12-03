@@ -36,7 +36,6 @@ public class GameManager : MonoBehaviour {
     }
 
     public void FailedLevel() {
-        Debug.LogWarning("failed called");
         failed = true;
     }
 
@@ -57,6 +56,7 @@ public class GameManager : MonoBehaviour {
             int i = 0;
             while (i < 40) {
                 yield return new WaitForSeconds(.5f);
+                i++;
                 if (failed) {
                     break;
                 }
