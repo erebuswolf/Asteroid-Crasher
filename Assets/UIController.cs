@@ -6,13 +6,25 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour {
     public GameObject StartUI;
-    public GameObject Level1Instructions;
+    public List<GameObject> LevelInstructions;
     public GameObject LevelFail;
+    public GameObject Victory;
+
 
     public void HideStartUI() {
         StartUI.SetActive(false);
     }
     
+    public void Success() {
+        Victory.SetActive(true);
+
+    }
+
+    public void HideSuccess() {
+        Victory.SetActive(false);
+
+    }
+
     public void FailedLevel() {
         LevelFail.SetActive(true);
     }
@@ -22,12 +34,11 @@ public class UIController : MonoBehaviour {
     }
 
     public void StartLevel (int level) {
-        Level1Instructions.SetActive(true);
+        LevelInstructions[level].SetActive(true);
     }
 
-    public void HideGameUI () {
-        Level1Instructions.SetActive(false);
-
+    public void HideGameUI (int level) {
+        LevelInstructions[level].SetActive(false);
     }
 
     // Use this for initialization

@@ -5,9 +5,11 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
     public AsteroidSpawner Spawner;
 
+    public List<float> GateScale;
+
     public PlayerControlScript Player;
 
-    int currentLevel = 1;
+    int currentLevel = 0;
     bool started = false;
 
     bool failed = false;
@@ -20,6 +22,23 @@ public class GameManager : MonoBehaviour {
         return started;
     }
 
+    public bool CheckWinCondition(int level, PlayerControlScript player) {
+        switch(level) {
+            case 0:
+                return CheckWinConditionLevel1(player);
+            case 1:
+                return CheckWinConditionLevel2(player);
+            default:
+                return false;
+        }
+    }
+
+    public bool CheckWinConditionLevel2(PlayerControlScript player) {
+        if (player.CheckVictory() && player.AsteroidCount() < 10) {
+            FailedLevel();
+        }
+        return player.AsteroidCount() >= 5 && player.CheckVictory();
+    }
     public bool CheckWinConditionLevel1(PlayerControlScript player) {
         if (player.CheckVictory() && player.AsteroidCount() < 5) {
             FailedLevel();
@@ -46,9 +65,9 @@ public class GameManager : MonoBehaviour {
                 yield return new WaitForSeconds(3);
                 uiController.ClearFail();
             }
-            uiController.StartLevel(1);
+            uiController.StartLevel(currentLevel);
             yield return new WaitForSeconds(3);
-            uiController.HideGameUI();
+            uiController.HideGameUI(currentLevel);
             if (failed) {
                 yield return new WaitForSeconds(2f);
             }
@@ -94,10 +113,10 @@ public class GameManager : MonoBehaviour {
                 continue;
             }
 
-            Spawner.SpawnGate(1);
+            Spawner.SpawnGate(GateScale[currentLevel]);
 
             i = 0;
-            while (!CheckWinConditionLevel1(Player) && !failed) {
+            while (!CheckWinCondition(currentLevel, Player) && !failed) {
                 yield return new WaitForSeconds(.1f);
                 i++;
             }
@@ -105,10 +124,18 @@ public class GameManager : MonoBehaviour {
         } while (failed);
 
         Spawner.TriggerVictoryOnGate();
+        uiController.Success();
         yield return new WaitForSeconds(3f);
         Player.resetToNextLevel();
         // Level Victory
+        currentLevel++;
+        uiController.HideSuccess();
 
+        if (currentLevel<= GateScale.Count) {
+            StartCoroutine(PlayLevel());
+        } else {
+            // roll credits
+        }
     }
 	
 	// Update is called once per frame
