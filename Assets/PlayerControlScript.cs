@@ -20,9 +20,15 @@ public class PlayerControlScript : MonoBehaviour {
 
     bool endGame;
 
+    bool endRoutine;
+
     bool passedGate;
     
     public GameManager manager;
+
+    public int AsteroidCount() {
+        return GetAsteroidCount(this.gameObject);
+    }
 
     public void PassedGate() {
         passedGate = true;
@@ -50,21 +56,48 @@ public class PlayerControlScript : MonoBehaviour {
         return count;
     }
 
+    // Function to remove all asteroids from the player.
+    void ShedAsteroids() {
+
+    }
+
+    public void resetToNextLevel() {
+        endGame = false;
+        ShedAsteroids();
+        StartCoroutine(resetLevelRoutine());
+    } 
+
+    IEnumerator resetLevelRoutine() {
+        endRoutine = true;
+        Vector3 curPos = this.transform.position;
+        curPos.x = 25;
+        this.transform.position = curPos;
+
+        RigidBody.velocity = new Vector2(-10, 0);
+        while(this.transform.position.x > -8.3f) {
+            yield return new WaitForSeconds(0.01f);
+        }
+        Vector3 pos = this.transform.position;
+        pos.x = -8.3f;
+        this.transform.position = pos;
+        
+        manager.StartNextLevel();
+
+        endRoutine = false;
+    }
+
 	// Update is called once per frame
 	void Update () {
-        if (!manager.GameStarted()) {
+        if (!manager.GameStarted() || endRoutine) {
             return;
         }
         asteroidCount = GetAsteroidCount(this.gameObject);
         handleMovement();
         handleRotation();
-        checkVictory();
     }
 
-    void checkVictory() {
-        if (transform.position.x > 21 && passedGate) {
-            Debug.LogWarning("victory");
-        }
+    public bool CheckVictory() {
+        return (transform.position.x > 21 && passedGate);
     }
 
     void handleRotation() {
@@ -82,7 +115,7 @@ public class PlayerControlScript : MonoBehaviour {
             }
         }
 
-        float moveVel = AngularVel * (1f - Mathf.Lerp(0, .9f, Mathf.Clamp01(asteroidCount / 20f)));
+        float moveVel = AngularVel * (1f - Mathf.Sqrt( Mathf.Lerp(0, .9f, Mathf.Clamp01(asteroidCount / 20f))));
 
         if (rotateRight && !rotateLeft) {
             RigidBody.angularVelocity = -moveVel;

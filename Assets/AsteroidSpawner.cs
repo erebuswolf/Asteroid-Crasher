@@ -40,6 +40,10 @@ public class AsteroidSpawner : MonoBehaviour {
         Gamegate.GetComponent<Gate>().StartEnd();
     }
 
+    public void TriggerVictoryOnGate() {
+        Gamegate.GetComponent<Gate>().RunVictory();
+    }
+
     // Use this for initialization
     void Start () {
         Gamegate = Instantiate(GatePrefab);

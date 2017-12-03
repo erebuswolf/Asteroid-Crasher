@@ -383,7 +383,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b966daa0ea027a3479a91350edfb0501, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawner: {fileID: 201728291}
+  Spawner: {fileID: 201728291}
+  Player: {fileID: 1064301702}
   uiController: {fileID: 1473575741}
 --- !u!1001 &1019466447
 Prefab:
@@ -431,6 +432,12 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6bdb71f2f855c7a4aa1431efff566f57, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &1064301702 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114992359283255900, guid: 9a9951cbadc0276488d289c0da7a4103,
+    type: 2}
+  m_PrefabInternal: {fileID: 1651755311}
+  m_Script: {fileID: 11500000, guid: 360a5af36ea243e4fb95f348967a39a9, type: 3}
 --- !u!1 &1473575739
 GameObject:
   m_ObjectHideFlags: 0
