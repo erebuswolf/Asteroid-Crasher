@@ -22,27 +22,27 @@ public class Asteroid : MonoBehaviour {
 
     public void SetType(TYPE newType) {
         type = newType;
-        Color newColor = Color.white;
-        switch(type) {
+        Sprite sprite = Resources.Load<Sprite>("asteroid");
+        switch (type) {
             case TYPE.IRON:
-                newColor = new Color(255/255f, 69 / 255f, 0);
+                sprite = Resources.Load<Sprite>("asteroidIron");
                 break;
             case TYPE.CRYSTAL:
                 break;
             case TYPE.ICE:
-                newColor = new Color(0, 213 / 255f, 255 / 255f);
+                sprite = Resources.Load<Sprite>("asteroidIce");
                 break;
             case TYPE.PLATINUM:
                 break;
             case TYPE.GOLD:
-                newColor = new Color(220 / 255f, 255 / 255f, 0);
+                sprite = Resources.Load<Sprite>("asteroidGold");
                 break;
             case TYPE.NORMAL:
                 break;
         }
 
-        PhysicsObject.GetComponent<SpriteRenderer>().color = newColor;
-        VisObject.GetComponent<SpriteRenderer>().color = newColor;
+        PhysicsObject.GetComponent<SpriteRenderer>().sprite = sprite;
+        VisObject.GetComponent<SpriteRenderer>().sprite = sprite;
     }
 
 
