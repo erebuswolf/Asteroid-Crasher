@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour {
 
     public UIController uiController;
 
+    public AudioSource BaseDrop;
+
     public bool GameStarted() {
         return started;
     }
@@ -121,6 +123,15 @@ public class GameManager : MonoBehaviour {
         failed = true;
     }
 
+    IEnumerator DropBase() {
+        float i = 0;
+        while(i !=1) {
+            i += .15f;
+            BaseDrop.volume = i;
+            yield return new WaitForSeconds(.05f);
+        }
+    }
+
     IEnumerator PlayLevel() {
         do {
             if (failed && currentLevel != 7) {
@@ -136,6 +147,9 @@ public class GameManager : MonoBehaviour {
                 uiController.HideGameUI(currentLevel);
             } else {
                 yield return new WaitForSeconds(3);
+            }
+            if (currentLevel >= 2 && BaseDrop.volume == 0) {
+                StartCoroutine(DropBase());
             }
 
             if (failed) {
